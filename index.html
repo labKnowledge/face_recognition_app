@@ -24,61 +24,61 @@
             </gradio-requirements>
         
             <gradio-file name="main.py" entrypoint>
-    import gradio as gr
-    import cv2
-    import numpy as np
-    from PIL import Image
-    
-    
-    def interesting_filter(image):
-        # Load the pre-trained age progression model (Age-cGAN)
-        model = cv2.dnn.readNetFromCaffe("deploy_age.prototxt", "age_net.caffemodel")
-    
-        # Open the image using OpenCV
-        img = cv2.imdecode(np.frombuffer(image.read(), np.uint8), -1)
-    
-        # Resize the image to the input size required by the model (256x256)
-        input_blob = cv2.dnn.blobFromImage(img, 1.0, (256, 256), (0, 0, 0), swapRB=False, crop=False)
-    
-        # Set the input to the model and perform forward pass
-        model.setInput(input_blob)
-        output = model.forward()
-    
-        # Extract the age progression image from the output
-        age_progression_img = output[0].transpose((1, 2, 0))
-    
-        # Convert the age progression image to PIL format
-        pil_img = Image.fromarray(age_progression_img.astype(np.uint8))
-    
-        # Return the age progressed image
-        return pil_img
-    
-    def age_progression(image):
-        # Load the pre-trained age progression model (Age-cGAN)
-        model = cv2.dnn.readNetFromCaffe("deploy_age.prototxt", "age_net.caffemodel")
-    
-        # Open the image using OpenCV
-        img = cv2.imdecode(np.frombuffer(image.read(), np.uint8), -1)
-    
-        # Resize the image to the input size required by the model (256x256)
-        input_blob = cv2.dnn.blobFromImage(img, 1.0, (256, 256), (0, 0, 0), swapRB=False, crop=False)
-    
-        # Set the input to the model and perform forward pass
-        model.setInput(input_blob)
-        output = model.forward()
-    
-        # Extract the age progression image from the output
-        age_progression_img = output[0].transpose((1, 2, 0))
-    
-        # Convert the age progression image to PIL format
-        pil_img = Image.fromarray(age_progression_img.astype(np.uint8))
-    
-        # Return the age progressed image
-        return pil_img
-    
-    # Create the Gradio interface gr.Image()
-    gr.Interface(fn=age_progression, inputs=gr.Image(), outputs="image", title="Interesting Filter").launch()
-    
+import gradio as gr
+import cv2
+import numpy as np
+from PIL import Image
+
+
+def interesting_filter(image):
+    # Load the pre-trained age progression model (Age-cGAN)
+    model = cv2.dnn.readNetFromCaffe("deploy_age.prototxt", "age_net.caffemodel")
+
+    # Open the image using OpenCV
+    img = cv2.imdecode(np.frombuffer(image.read(), np.uint8), -1)
+
+    # Resize the image to the input size required by the model (256x256)
+    input_blob = cv2.dnn.blobFromImage(img, 1.0, (256, 256), (0, 0, 0), swapRB=False, crop=False)
+
+    # Set the input to the model and perform forward pass
+    model.setInput(input_blob)
+    output = model.forward()
+
+    # Extract the age progression image from the output
+    age_progression_img = output[0].transpose((1, 2, 0))
+
+    # Convert the age progression image to PIL format
+    pil_img = Image.fromarray(age_progression_img.astype(np.uint8))
+
+    # Return the age progressed image
+    return pil_img
+
+def age_progression(image):
+    # Load the pre-trained age progression model (Age-cGAN)
+    model = cv2.dnn.readNetFromCaffe("deploy_age.prototxt", "age_net.caffemodel")
+
+    # Open the image using OpenCV
+    img = cv2.imdecode(np.frombuffer(image.read(), np.uint8), -1)
+
+    # Resize the image to the input size required by the model (256x256)
+    input_blob = cv2.dnn.blobFromImage(img, 1.0, (256, 256), (0, 0, 0), swapRB=False, crop=False)
+
+    # Set the input to the model and perform forward pass
+    model.setInput(input_blob)
+    output = model.forward()
+
+    # Extract the age progression image from the output
+    age_progression_img = output[0].transpose((1, 2, 0))
+
+    # Convert the age progression image to PIL format
+    pil_img = Image.fromarray(age_progression_img.astype(np.uint8))
+
+    # Return the age progressed image
+    return pil_img
+
+# Create the Gradio interface gr.Image()
+gr.Interface(fn=age_progression, inputs=gr.Image(), outputs="image", title="Interesting Filter").launch()
+
             </gradio-file>
         </gradio-lite>
     
