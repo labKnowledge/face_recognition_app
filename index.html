@@ -22,86 +22,39 @@
         </gradio-requirements>
     
         <gradio-file name="main.py" entrypoint>
-import cv2
-import os
-import gradio as gr
-
-
-#add folder path containing jpg or png images to read and display them
-
-image_folder = './images'
-
-for filename in os.listdir(image_folder):
-    if filename.endswith(".jpg") or filename.endswith(".png") :
-        image_path = os.path.join(image_folder, filename)
-        
-        # Read the image
-        image = cv2.imread(image_path)
-        
-        # Display the image
-        cv2.imshow('Image', image)
-        cv2.waitKey(0)  # Wait for key press to display the next image
-        cv2.destroyAllWindows()
-        
-        
-
-# Load the pre-trained face recognition model
-face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-
-def recognize_faces(image_path):
-    # Read the image
-    image = cv2.imread(image_path)
-    
-    # Check if the image was read successfully
-    if image is None or image.size == 0:
-        print(f"Failed to read or empty image: {image_path}")
-        return
-    
-    # Convert to grayscale for face detection
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    
-    # Detect faces in the image
-    faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
-    
-    # Draw rectangles around the detected faces
-    for (x, y, w, h) in faces:
-        cv2.rectangle(image, (x, y), (x+w, y+h), (0, 255, 0), 3)
-    
-    # Display the image with faces detected
-    cv2.imshow('Face Recognition', image)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-
-    
-    
-    
-    
-# Path to the folder containing the images
-def process_input_folder(upload):
-    folder_path = "./temp_folder"
-    os.makedirs(folder_path, exist_ok=True)
-    
-    # Iterate over the uploaded files and save them in the temporary folder
-    for file in upload:
-        file_path = os.path.join(folder_path, file.name)
-        with open(file_path, "wb") as f:
-            f.write(file.read())
-        recognize_faces(file_path)   
-
-    
-    # Remove the temporary folder
-    for filename in os.listdir(folder_path):
-        file_path = os.path.join(folder_path, filename)
-        os.remove(file_path)
-    os.rmdir(folder_path)
-
-    
-#interface designed through gradio   
-    
-iface = gr.Interface(fn=process_input_folder, inputs="files", outputs=None, title="Face Recognition",
-                    description="Upload a folder containing images, and the system will detect faces and draw rectangles around them in each image.")
-
-iface.launch() 
+            import gradio as gr
+            import cv2
+            import numpy as np
+            from PIL import Image
+            
+            
+            def interesting_filter(image):
+                # Open the image using OpenCV
+                img = cv2.imdecode(np.frombuffer(image.read(), np.uint8), -1)
+            
+                # Convert the image to grayscale using cv2
+                grayscale_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            
+                # Apply Gaussian blur
+                blurred_img = cv2.GaussianBlur(grayscale_img, (21, 21), 0)
+            
+                # Apply edge detection
+                edge_img = cv2.Canny(blurred_img, 30, 150)
+            
+                # Convert the edge-detected image back to PIL format
+                pil_img = Image.fromarray(edge_img)
+            
+                # Return the processed image
+                return pil_img
+            
+            
+            # Define the input and output interfaces for the app
+            input_interface = gr.inputs.Image(label="Upload Image")
+            output_interface = gr.outputs.Image(label="Interesting Effect")
+            
+            # Create the Gradio interface
+            gr.Interface(interesting_filter, inputs=input_interface, outputs=output_interface, title="Interesting Filter").launch()
+            
         </gradio-file>
     </gradio-lite>
 
