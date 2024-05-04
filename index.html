@@ -22,39 +22,39 @@
         </gradio-requirements>
     
         <gradio-file name="main.py" entrypoint>
-            import gradio as gr
-            import cv2
-            import numpy as np
-            from PIL import Image
-            
-            
-            def interesting_filter(image):
-                # Open the image using OpenCV
-                img = cv2.imdecode(np.frombuffer(image.read(), np.uint8), -1)
-            
-                # Convert the image to grayscale using cv2
-                grayscale_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            
-                # Apply Gaussian blur
-                blurred_img = cv2.GaussianBlur(grayscale_img, (21, 21), 0)
-            
-                # Apply edge detection
-                edge_img = cv2.Canny(blurred_img, 30, 150)
-            
-                # Convert the edge-detected image back to PIL format
-                pil_img = Image.fromarray(edge_img)
-            
-                # Return the processed image
-                return pil_img
-            
-            
-            # Define the input and output interfaces for the app
-            input_interface = gr.inputs.Image(label="Upload Image")
-            output_interface = gr.outputs.Image(label="Interesting Effect")
-            
-            # Create the Gradio interface
-            gr.Interface(interesting_filter, inputs=input_interface, outputs=output_interface, title="Interesting Filter").launch()
-            
+import gradio as gr
+import cv2
+import numpy as np
+from PIL import Image
+
+
+def interesting_filter(image):
+    # Open the image using OpenCV
+    img = cv2.imdecode(np.frombuffer(image.read(), np.uint8), -1)
+
+    # Convert the image to grayscale using cv2
+    grayscale_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+    # Apply Gaussian blur
+    blurred_img = cv2.GaussianBlur(grayscale_img, (21, 21), 0)
+
+    # Apply edge detection
+    edge_img = cv2.Canny(blurred_img, 30, 150)
+
+    # Convert the edge-detected image back to PIL format
+    pil_img = Image.fromarray(edge_img)
+
+    # Return the processed image
+    return pil_img
+
+
+# Define the input and output interfaces for the app
+input_interface = gr.inputs.Image(label="Upload Image")
+output_interface = gr.outputs.Image(label="Interesting Effect")
+
+# Create the Gradio interface
+gr.Interface(interesting_filter, inputs=input_interface, outputs=output_interface, title="Interesting Filter").launch()
+
         </gradio-file>
     </gradio-lite>
 
