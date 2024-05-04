@@ -49,11 +49,11 @@ def interesting_filter(image):
 
 
 # Define the input and output interfaces for the app
-input_interface = Image(label="Upload Image")
-output_interface = Image(label="Interesting Effect")
+#input_interface = Image(label="Upload Image")
+#output_interface = Image(label="Interesting Effect")
 
-# Create the Gradio interface
-gr.Interface(fn=interesting_filter, inputs=input_interface, outputs=output_interface, title="Interesting Filter").launch()
+# Create the Gradio interface gr.Image()
+gr.Interface(fn=interesting_filter, inputs=gr.Image(), outputs="image", title="Interesting Filter").launch()
 
         </gradio-file>
     </gradio-lite>
